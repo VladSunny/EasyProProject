@@ -24,7 +24,7 @@ zbz = 1
 mad = 0
 madt = True
 hat_meny = False
-
+gamers = 1
 #допустим opat
 
 hat1rl = pygame.image.load('hat1_for_lolb.png')
@@ -82,6 +82,8 @@ class Game:
                     change_too = 'RIGHT'
                 elif i.key == pygame.K_s:
                     change_too = 'DOWN'
+
+
         return change_too
 
     def refresh_display(self):
@@ -130,7 +132,7 @@ class Gusenica():
         self.head_gusenica_poz = [100, 50]
         self.gusenica_body = [[100, 50], [90, 50], [80, 50], [70, 50], [60, 50]]
         self.gusenica_color = color
-        self.direction = 'DOWNs'
+        self.direction = 'DOWN'
         self.change_too = 'DOWN'
         self.gusenica_spid = 5
 
@@ -295,6 +297,7 @@ FPS = 60
 
 game = Game()
 snake = Gusenica('green') #при создании экземпляра класса необходимо передать цвет
+gusinuchka_2 = Gusenica('red')
 food = Food(THECOLORS['red'], game.screan_widght, game.screan_height)
 
 game.init_and_check_for_errors()
@@ -351,25 +354,40 @@ while True:
                 now_pop = 3
             elif game.score <= 40 and hat_meny:
                 t = True
-
-
+            if i.key == pygame.K_F2 and gamers == 1:
+                gamers = 2
+                print(gamers)
+            elif i.key == pygame.K_F2 and gamers == 2:
+                gamers = 1
+            if gamers == 2:
+                if i.key == pygame.K_UP:
+                    gusinuchka_2.change_too = 'UP'
+                elif i.key == pygame.K_LEFT:
+                    gusinuchka_2.change_too = 'LEFT'
+                elif i.key == pygame.K_RIGHT:
+                    gusinuchka_2.change_too = 'RIGHT'
+                elif i.key == pygame.K_DOWN:
+                    gusinuchka_2.change_too = 'DOWN'
 
             print(snake.change_too)
             print(snake.direction)
     if not bch:
         snake.change_to = game.event_look(snake.change_too)
-
+        if gamers == 2:
+            gusinuchka_2.change_to = game.event_look(gusinuchka_2.change_too)
         if not hat_meny:
             snake.validate_direction_and_change()
             snake.change_head_pozition()
+            if gamers == 2:
+                gusinuchka_2.validate_direction_and_change()
+                gusinuchka_2.change_head_pozition()
+                food.food_poz, game.score = gusinuchka_2.gusenica_body_mexanizm(game.score, food.food_poz, game.screan_widght,
+                                                                         game.screan_height)
             food.food_poz, game.score = snake.gusenica_body_mexanizm(game.score, food.food_poz, game.screan_widght, game.screan_height)
     							#здесь у тебя было Gusenica.gusenica_body_mexanizm
 
 
     							#А нужно вызывать функцию от созданного объекта
-
-
-
 
 
 
@@ -382,7 +400,7 @@ while True:
 
     if not bch and not hat_meny:
         snake.draw_snake(game.play_surface, 'purple', hat1rl, hat2rl, hat3rl, hat1ud, hat2ud, hat3ud)# передаешь вместо цвета объект game
-
+        gusinuchka_2.draw_snake(game.play_surface, 'purple', hat1rl, hat2rl, hat3rl, hat1ud, hat2ud, hat3ud)
         food.draw_food(game.play_surface)
 
     snake.check_for_boundaries(
