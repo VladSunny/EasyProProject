@@ -25,7 +25,7 @@ mad = 0
 madt = True
 hat_meny = False
 
-#допустим
+#допустим opat
 
 hat1rl = pygame.image.load('hat1_for_lolb.png')
 hat1ud = pygame.transform.rotate(hat1rl, 90)
