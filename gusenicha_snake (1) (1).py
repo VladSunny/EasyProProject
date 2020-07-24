@@ -180,12 +180,20 @@ class Gusenica():
         global chipr
         global chipu
         global chipd
+        global gamers
         sc.fill(THECOLORS[color])
         for poz in self.gusenica_body:
             pygame.draw.circle(sc, THECOLORS[self.gusenica_color], (poz[0], poz[1]), 7)
+        if gamers == 2:
+            for poz in gusinuchka_2.gusenica_body:
+                pygame.draw.circle(sc, THECOLORS[gusinuchka_2.gusenica_color], (poz[0], poz[1]), 7)
         poz = self.gusenica_body[0]
         pygame.draw.circle(sc, THECOLORS['grey'], (poz[0], poz[1]), 6)
         pygame.draw.circle(sc, THECOLORS['black'], (poz[0], poz[1]), 3)
+        if gamers == 2:
+            poz = gusinuchka_2.gusenica_body[0]
+            pygame.draw.circle(sc, THECOLORS['grey'], (poz[0], poz[1]), 6)
+            pygame.draw.circle(sc, THECOLORS['black'], (poz[0], poz[1]), 3)
         hat1rl = pygame.transform.scale(hat1rl, (20, 20))
         hat2rl = pygame.transform.scale(hat2rl, (20, 20))
         hat3rl = pygame.transform.scale(hat3rl, (20, 20))
@@ -400,7 +408,6 @@ while True:
 
     if not bch and not hat_meny:
         snake.draw_snake(game.play_surface, 'purple', hat1rl, hat2rl, hat3rl, hat1ud, hat2ud, hat3ud)# передаешь вместо цвета объект game
-        gusinuchka_2.draw_snake(game.play_surface, 'purple', hat1rl, hat2rl, hat3rl, hat1ud, hat2ud, hat3ud)
         food.draw_food(game.play_surface)
 
     snake.check_for_boundaries(
