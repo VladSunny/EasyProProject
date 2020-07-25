@@ -288,7 +288,7 @@ class Gusenica():
               if (block[0] == self.head_gusenica_poz[0] and
                     block[1] == self.head_gusenica_poz[1]):
                 game_over()
-
+                # сложно
 
 class Food():
     def __init__(self, food_color, screen_width, screen_height):
