@@ -266,6 +266,7 @@ class Gusenica():
     def check_for_boundaries(self, game_over, screen_width, screen_height):
         """Проверка, что столкунлись с концами экрана или сами с собой
         (змея закольцевалась)"""
+        global gamers
         if any((
             self.head_gusenica_poz[0] > screen_width-10
             or self.head_gusenica_poz[0] < 0,
@@ -273,6 +274,14 @@ class Gusenica():
             or self.head_gusenica_poz[1] < 0
                 )):
             game_over()
+        if gamers == 2:
+            if any((
+                gusinuchka_2.head_gusenica_poz[0] > screen_width-10
+                or gusinuchka_2.head_gusenica_poz[0] < 0,
+                gusinuchka_2.head_gusenica_poz[1] > screen_height-10
+                or gusinuchka_2.head_gusenica_poz[1] < 0
+                    )):
+                gamers = 1
         for block in self.gusenica_body[1:]:
             # проверка на то, что первый элемент(голова) врезался в
             # любой другой элемент змеи (закольцевались)
