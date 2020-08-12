@@ -36,7 +36,7 @@ def draw_text(sc, text, x, y, size):
     text1 = font.render(f'{text}', 1, THECOLORS['white'])
     sc.blit(text1, (x, y))
 
-
+#
 
 skorost = 0.1
 
