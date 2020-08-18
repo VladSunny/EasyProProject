@@ -6,6 +6,11 @@ sc = pygame.display.set_mode((700, 600))
 sc.fill(THECOLORS['blue'])
 pygame.display.update()
 FLAG = True
+
+xb = 100
+yb = 100
+
+
 over_display = pygame.image.load('gameover.png')
 over_display = pygame.transform.scale(over_display, (700, 600))
 flapy_jump = pygame.mixer.Sound('wing.WAV')
@@ -13,10 +18,13 @@ new_point = pygame.mixer.Sound('point.WAV')
 start_menu = pygame.image.load('message.png')
 start_menu = pygame.transform.scale(start_menu, (700, 600))
 flapybird = pygame.image.load('FLB.png')
-flapybird = pygame.transform.scale(flapybird, (60, 45))
-pipe_down = pygame.image.load('pip.png')
-pipe_down = pygame.transform.scale(pipe_down, (100, 550))
+flapybird = pygame.transform.scale(flapybird, (60, 33))#.convert()
+rect_bird = flapybird.get_rect(bottomright = (100, 100))
+pipe_down = pygame.image.load('pipe-green.png')
+pipe_down = pygame.transform.scale(pipe_down, (100, 512))#.convert()
+rect_down = pipe_down.get_rect(bottomright = (600, 300), h = 512, w = 100)
 pipe_up = pygame.transform.rotate(pipe_down, 180)
+rect_up = pipe_up.get_rect(bottomright = (600, 300))
 game_over = False
 score = 0
 xp = 700
@@ -28,8 +36,7 @@ scs = 0
 
 menu = True
 
-xb = 100
-yb = 100
+
 
 def draw_text(sc, text, x, y, size):
     font = pygame.font.SysFont('arial', size)
@@ -63,16 +70,21 @@ while FLAG:
                 pip2 = True
 
     if not game_over:
-        if menu == False:
+        if  False:
             if pip2 :
                 xs -= 0.2
-               # print(f"////////////////{xs}")
-                sc.blit(pipe_down, (xs, 300))
-                sc.blit(pipe_up, (xs, -300))
 
-    sc.blit(flapybird, (xb, yb))
-    sc.blit(pipe_down, (xp, 300 + id))
-    sc.blit(pipe_up, (xp,  -300 + id))
+               # print(f"////////////////{xs}")
+                sc.blit(pipe_down, rect_down)
+                sc.blit(pipe_up, rect_up)
+    rect_bird.y = yb
+    rect_up.x = xp
+    rect_down.x = xp
+    rect_down.y = 300 + id
+    rect_up.y = -360 + id
+    sc.blit(flapybird, rect_bird)
+    sc.blit(pipe_down, rect_down)
+    sc.blit(pipe_up, rect_up)
     if not game_over:
         if menu == True:
             sc.blit(start_menu, (0, 0))
@@ -95,6 +107,6 @@ while FLAG:
                 xp =700
             if xs <= -100:
                 xs = 700
-
-            if xp <= xb + 60 <= xp + 100 or not 300 + id <= yb <= id + 550 + 350 or xs <= xb <= xs + 100 or 300 + id <= yb + 45 <= 300 + id + 550:
+            if rect_down.colliderect(rect_bird) or rect_up.colliderect(rect_bird):
+                game_over = True
                 print('stop')
