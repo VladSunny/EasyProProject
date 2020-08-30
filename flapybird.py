@@ -2,6 +2,8 @@ import pygame
 from pygame.colordict import THECOLORS
 from random import randint
 import sqlite3
+import math
+import neat
 conn = sqlite3.connect('bd.sqlite')
 
 cur = conn.cursor()
@@ -72,10 +74,27 @@ def draw_text(sc, text, x, y, size):
     text1 = font.render(f'{text}', 1, THECOLORS['white'])
     sc.blit(text1, (x, y))
 
+bot_jump = False
 #
+def jump():
+    global flapy_jump
+    global menu
+    global skorost
+    global yb
+    flapy_jump.play()
+    menu = False
+    yb -= 45
+    skorost = 0.1
+
+def get_len(yb, xb, xp, yp):
+    l = math.sqrt((yp - yb)**2 + (xp - xb)**2)
+    return l
+
+tr1 = False
+tr2 = False
 
 skorost = 0.1
-
+idxsmax = 0
 id = 0
 while FLAG:
     for i in pygame.event.get():
@@ -89,10 +108,7 @@ while FLAG:
                 pip2 = False
                 game_over = False
             elif i.key == pygame.K_SPACE:
-                flapy_jump.play()
-                menu = False
-                yb -= 45
-                skorost = 0.1
+                jump()
             if i.key == pygame.K_e:
                 if menu == False:
                     menu = True
@@ -135,9 +151,12 @@ while FLAG:
 
     if not game_over and not menu:
         if pip2 :
+
             xs -= 0.2
             rect_up.x = xs
             rect_down.x = xs
+            rect_up.y = -360 + idxsmax
+            rect_down.y = 300 + idxsmax
            # print(f"////////////////{xs}")
             sc.blit(pipe_down, rect_down)
             sc.blit(pipe_up, rect_up)
@@ -192,6 +211,25 @@ while FLAG:
             cur.execute("""update Score set score = ?;""", (str(gl_score)))
         score = 0
         sc.blit(over_display, (0, 0))
+    if xp < xs or xs == 700:
+            print(1)
+            tr1 = True
+            tr2 = False
+            pygame.draw.line(sc, THECOLORS['red'], (xb // 2 + 45, yb), (xp + 90, 500 + id - 200))
+            pygame.draw.line(sc, THECOLORS['red'], (xb // 2 + 45, yb), (xp + 90, -500 + id + 650))
+    if xs < xp:
+        tr1 = False
+        tr2 = True
+        print(2)
+        pygame.draw.line(sc, THECOLORS['white'], (xb // 2, yb), (xs + 90, 500 + idxsmax - 200))
+        pygame.draw.line(sc, THECOLORS['white'], (xb // 2, yb), (xs + 90, -500 + idxsmax + 650))
+
+    if yb > 500 + id - 200 - 50 and tr1 == True:
+        jump()
+    elif yb > 500 + idxsmax - 200 - 50 and tr2:
+        jump()
+
+
     pygame.display.update()
     sc.fill(THECOLORS['blue'])
     if not game_over and menu != True:
@@ -207,6 +245,7 @@ while FLAG:
                 xp =700
             if xs <= -100:
                 xs = 700
+                idxsmax = randint(-110, 110)
 
             if yc - 10 <= yb <= yc + 10:
                 #cur.execute("""select name, score from Monets;""")
@@ -217,7 +256,7 @@ while FLAG:
                 monet = False
                 print('yeeee')
 
-            if rect_down.colliderect(rect_bird) or rect_up.colliderect(rect_bird):
+            if rect_down.colliderect(rect_bird) or rect_up.colliderect(rect_bird) or yb >= 600 or yb <= 0:
                 game_over = True
                 print('stop')
 conn.commit()
